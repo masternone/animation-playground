@@ -1,0 +1,272 @@
+<section class="gift-hero" data-gift-hero aria-label="Gift box celebration animation">
+	<div class="gift-stage">
+		<div class="confetti-field" aria-hidden="true">
+			<span class="confetti ribbon c1"></span>
+			<span class="confetti dot c2"></span>
+			<span class="confetti shard c3"></span>
+			<span class="confetti plus c4"></span>
+			<span class="confetti ribbon c5"></span>
+			<span class="confetti dot c6"></span>
+			<span class="confetti shard c7"></span>
+			<span class="confetti plus c8"></span>
+			<span class="confetti ribbon c9"></span>
+			<span class="confetti dot c10"></span>
+			<span class="confetti shard c11"></span>
+			<span class="confetti plus c12"></span>
+		</div>
+
+		<div class="gift-box" aria-hidden="true">
+			<svg class="box-svg" viewBox="0 0 520 430" role="img">
+				<defs>
+					<linearGradient id="box-front" x1="0" x2="1" y1="0" y2="1">
+						<stop offset="0%" stop-color="#f6b24c" />
+						<stop offset="100%" stop-color="#d86438" />
+					</linearGradient>
+					<linearGradient id="box-side" x1="0" x2="1" y1="0" y2="1">
+						<stop offset="0%" stop-color="#d97a3c" />
+						<stop offset="100%" stop-color="#a73d36" />
+					</linearGradient>
+					<linearGradient id="box-top" x1="0" x2="1" y1="0" y2="1">
+						<stop offset="0%" stop-color="#ffd071" />
+						<stop offset="100%" stop-color="#f08b44" />
+					</linearGradient>
+				</defs>
+
+				<ellipse cx="260" cy="382" rx="190" ry="24" fill="#1d2433" opacity=".14" />
+
+				<g class="box-body">
+					<path d="M110 178h230l70 54v126H166l-56-54z" fill="url(#box-side)" />
+					<path d="M166 232h244v126H166z" fill="url(#box-front)" />
+					<path d="M110 178h230l70 54H166z" fill="url(#box-top)" />
+					<path d="M250 206h54v152h-54z" fill="#2f8f8a" opacity=".94" />
+					<path d="M218 178h52l88 54h-57z" fill="#43b7a9" />
+					<path d="M166 232h244" fill="none" stroke="#77342e" stroke-width="5" opacity=".18" />
+					<path d="M166 232l-56-54" fill="none" stroke="#fff6d7" stroke-width="6" opacity=".32" />
+				</g>
+
+				<g class="box-lid">
+					<path d="M134 134h250l-44 44H110z" fill="#ffc764" />
+					<path d="M340 178l44-44 48 34-42 50z" fill="#cc5e38" />
+					<path d="M110 178h230l50 40H160z" fill="#f18a42" />
+					<path d="M242 134h58l94 70h-58z" fill="#40ada2" />
+					<path d="M221 126c-34-31-14-66 26-48 20 9 31 30 31 56" fill="none" stroke="#43b7a9" stroke-width="18" stroke-linecap="round" />
+					<path d="M300 132c5-40 42-57 62-27 19 30-20 51-61 45" fill="none" stroke="#43b7a9" stroke-width="18" stroke-linecap="round" />
+				</g>
+			</svg>
+		</div>
+	</div>
+</section>
+
+<script>
+	const hero = document.querySelector("[data-gift-hero]");
+
+	if (hero) {
+		window.setTimeout(() => {
+			hero.classList.add("is-open");
+		}, 450);
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				const shouldFall = entry.intersectionRatio < 0.32;
+				const isFalling = hero.classList.contains("is-falling");
+
+				if (shouldFall && !isFalling) {
+					hero.classList.remove("is-resetting");
+					hero.classList.add("is-falling");
+				}
+
+				if (!shouldFall && isFalling) {
+					hero.classList.add("is-resetting");
+					hero.classList.remove("is-falling");
+
+					window.setTimeout(() => {
+						hero.classList.remove("is-resetting");
+					}, 120);
+				}
+			},
+			{
+				threshold: [0, 0.16, 0.32, 0.5, 0.75, 1],
+			},
+		);
+
+		observer.observe(hero);
+	}
+</script>
+
+<style>
+	.gift-hero {
+		position: relative;
+		display: grid;
+		min-height: 100svh;
+		overflow: hidden;
+		place-items: center;
+		background:
+			radial-gradient(circle at 20% 18%, rgb(255 255 255 / 78%), transparent 18rem),
+			linear-gradient(140deg, #fbf7ec 0%, #d8f0ea 46%, #f7c7a2 100%);
+	}
+
+	.gift-stage {
+		position: relative;
+		width: 100vw;
+		aspect-ratio: .78;
+		display: grid;
+		place-items: end center;
+	}
+
+	.gift-box {
+		position: relative;
+		z-index: 2;
+		width: min(88vw, 420px);
+		transform: translateY(4%);
+		filter: drop-shadow(0 34px 36px rgb(78 49 36 / 20%));
+	}
+
+	.box-svg {
+		display: block;
+		width: 100%;
+		height: auto;
+		overflow: visible;
+	}
+
+	.box-lid {
+		transform-box: fill-box;
+		transform-origin: 19% 76%;
+		transition:
+			transform 900ms cubic-bezier(.18, 1.08, .26, 1),
+			filter 900ms ease;
+	}
+
+	.is-open .box-lid {
+		transform: translate(-46px, -96px) rotate(-22deg);
+		filter: drop-shadow(18px 24px 14px rgb(99 56 35 / 18%));
+	}
+
+	.confetti-field {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.confetti {
+		--burst-x: 0px;
+		--burst-y: 0px;
+		--fall-x: 0px;
+		--spin: 0deg;
+		--delay: 0ms;
+		position: absolute;
+		left: 50%;
+		top: 58%;
+		width: clamp(13px, 1.9vw, 24px);
+		height: clamp(13px, 1.9vw, 24px);
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(.2) rotate(0deg);
+		transition:
+			opacity 240ms ease var(--delay),
+			transform 900ms cubic-bezier(.16, 1.2, .26, 1) var(--delay);
+	}
+
+	.is-open .confetti {
+		opacity: 1;
+		transform: translate(calc(-50% + var(--burst-x)), calc(-50% + var(--burst-y))) scale(1) rotate(var(--spin));
+		animation: hover-drift 2200ms ease-in-out calc(var(--delay) + 800ms) infinite alternate;
+	}
+
+	.is-falling .confetti {
+		opacity: 0;
+		transform: translate(calc(-50% + var(--burst-x) + var(--fall-x)), 88vh) scale(.88) rotate(calc(var(--spin) + 220deg));
+		transition:
+			opacity 320ms ease 760ms,
+			transform 1050ms cubic-bezier(.52, .02, .92, .58);
+		animation-play-state: paused;
+	}
+
+	.is-resetting .confetti {
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(.2) rotate(0deg);
+		transition: none;
+		animation: none;
+	}
+
+	.ribbon {
+		border-radius: 999px;
+		background: #e6426f;
+	}
+
+	.dot {
+		border-radius: 50%;
+		background: #2aa5b8;
+	}
+
+	.shard {
+		clip-path: polygon(50% 0, 100% 100%, 0 74%);
+		background: #ffc43d;
+	}
+
+	.plus {
+		background:
+			linear-gradient(#ffffff 0 0) center / 34% 100% no-repeat,
+			linear-gradient(#ffffff 0 0) center / 100% 34% no-repeat,
+			#6d5dfc;
+		border-radius: 4px;
+	}
+
+	.c1 { --burst-x: -164px; --burst-y: -242px; --fall-x: -82px; --spin: -42deg; --delay: 120ms; }
+	.c2 { --burst-x: -118px; --burst-y: -314px; --fall-x: 48px; --spin: 18deg; --delay: 50ms; }
+	.c3 { --burst-x: -76px; --burst-y: -206px; --fall-x: -42px; --spin: 74deg; --delay: 170ms; }
+	.c4 { --burst-x: -18px; --burst-y: -346px; --fall-x: 72px; --spin: -18deg; --delay: 90ms; }
+	.c5 { --burst-x: 48px; --burst-y: -268px; --fall-x: -58px; --spin: 46deg; --delay: 210ms; }
+	.c6 { --burst-x: 104px; --burst-y: -330px; --fall-x: 84px; --spin: -72deg; --delay: 135ms; }
+	.c7 { --burst-x: 146px; --burst-y: -226px; --fall-x: -34px; --spin: 28deg; --delay: 75ms; }
+	.c8 { --burst-x: 166px; --burst-y: -162px; --fall-x: 60px; --spin: 92deg; --delay: 185ms; }
+	.c9 { --burst-x: -174px; --burst-y: -138px; --fall-x: -56px; --spin: 22deg; --delay: 245ms; }
+	.c10 { --burst-x: -102px; --burst-y: -126px; --fall-x: 38px; --spin: -120deg; --delay: 280ms; }
+	.c11 { --burst-x: 98px; --burst-y: -122px; --fall-x: -70px; --spin: 140deg; --delay: 260ms; }
+	.c12 { --burst-x: 174px; --burst-y: -92px; --fall-x: 50px; --spin: -28deg; --delay: 300ms; }
+
+	@keyframes hover-drift {
+		from {
+			margin-top: -5px;
+		}
+
+		to {
+			margin-top: 9px;
+		}
+	}
+
+	@media (min-width: 681px) {
+		.gift-stage {
+			width: min(88vw, 860px);
+			aspect-ratio: 1.5;
+		}
+
+		.gift-box {
+			width: min(70vw, 520px);
+		}
+
+		.confetti {
+			top: 62%;
+		}
+
+		.c1 { --burst-x: -390px; --burst-y: -292px; }
+		.c2 { --burst-x: -286px; --burst-y: -382px; }
+		.c3 { --burst-x: -164px; --burst-y: -280px; }
+		.c4 { --burst-x: -56px; --burst-y: -412px; }
+		.c5 { --burst-x: 82px; --burst-y: -326px; }
+		.c6 { --burst-x: 188px; --burst-y: -424px; }
+		.c7 { --burst-x: 306px; --burst-y: -306px; }
+		.c8 { --burst-x: 398px; --burst-y: -220px; }
+		.c9 { --burst-x: -430px; --burst-y: -138px; }
+		.c10 { --burst-x: -238px; --burst-y: -172px; }
+		.c11 { --burst-x: 240px; --burst-y: -162px; }
+		.c12 { --burst-x: 426px; --burst-y: -112px; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.box-lid,
+		.confetti {
+			transition-duration: 1ms;
+			animation: none;
+		}
+	}
+</style>
