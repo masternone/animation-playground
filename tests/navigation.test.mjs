@@ -4,19 +4,23 @@ import test from 'node:test';
 
 const readBuiltPage = (path) => readFile(new URL(`../dist/${path}`, import.meta.url), 'utf8');
 
-test('the home page links to the Scroll Card Gallery experiment', async () => {
+test('the shared header links to each experiment from the home page', async () => {
 	const homePage = await readBuiltPage('index.html');
 
 	assert.match(homePage, /href="\/animation-playground\/scroll-cards\/"/);
-	assert.match(homePage, />Explore scroll cards</);
+	assert.match(homePage, />Scroll Cards</);
+	assert.match(homePage, /href="\/animation-playground\/" aria-current="page"[^>]*>Gift Box</);
 });
 
-test('the Motion Comparison page links back to the playground', async () => {
+test('the shared header links to each experiment from the Motion Comparison page', async () => {
 	const comparisonPage = await readBuiltPage('scroll-cards/index.html');
 
 	assert.match(comparisonPage, /<h1[^>]*>Scroll Card Gallery<\/h1>/);
 	assert.match(comparisonPage, /href="\/animation-playground\/"/);
-	assert.match(comparisonPage, />Back to playground</);
+	assert.match(
+		comparisonPage,
+		/href="\/animation-playground\/scroll-cards\/" aria-current="page"[^>]*>Scroll Cards</,
+	);
 });
 
 test('the Motion Comparison presents GSAP before native CSS', async () => {

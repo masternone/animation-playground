@@ -1,16 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <Layout title="Scroll Card Gallery">
 	<main>
-		<header class="experiment-nav">
-			<a href={`${base}/`}>Back to playground</a>
-			<span>Motion Comparison</span>
-		</header>
-
 		<section class="hero" aria-labelledby="page-title">
 			<div class="hero-content">
 				<p class="eyebrow">Browser motion study</p>
@@ -54,32 +47,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 		min-height: 100svh;
 	}
 
-	.experiment-nav {
-		position: absolute;
-		inset: 0 0 auto;
-		z-index: 2;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 20px clamp(20px, 4vw, 64px);
-		font-size: 0.875rem;
-		font-weight: 700;
-	}
-
-	.experiment-nav a {
-		color: inherit;
-		text-underline-offset: 4px;
-	}
-
-	.experiment-nav span {
-		color: rgb(246 241 231 / 64%);
-	}
-
 	.hero {
 		display: grid;
 		min-height: 100svh;
 		place-items: end start;
-		padding: clamp(96px, 14vw, 180px) clamp(20px, 7vw, 112px);
+		padding: clamp(96px, 14vw, 180px) var(--page-gutter);
 		box-sizing: border-box;
 		background:
 			linear-gradient(180deg, rgb(18 22 23 / 6%) 30%, rgb(18 22 23 / 92%) 100%),
@@ -120,7 +92,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 		min-height: 100svh;
 		align-content: start;
 		overflow: hidden;
-		padding: clamp(72px, 9vw, 128px) clamp(20px, 7vw, 112px);
+		padding: clamp(72px, 9vw, 128px) var(--page-gutter);
 		box-sizing: border-box;
 	}
 

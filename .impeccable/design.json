@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-23T13:08:28Z",
+  "title": "Design System: Animation Playground",
+  "extensions": {
+    "colorMeta": {
+      "workshop-ink": {
+        "role": "neutral",
+        "displayName": "Workshop Ink",
+        "canonical": "#172126",
+        "tonalRamp": ["oklch(15% 0.02 205)", "oklch(25% 0.02 205)", "oklch(36% 0.018 205)", "oklch(48% 0.016 205)", "oklch(60% 0.014 205)", "oklch(72% 0.012 205)", "oklch(84% 0.01 205)", "oklch(95% 0.006 205)"]
+      },
+      "midnight-stage": {
+        "role": "neutral",
+        "displayName": "Midnight Stage",
+        "canonical": "#121617",
+        "tonalRamp": ["oklch(14% 0.01 205)", "oklch(24% 0.012 205)", "oklch(35% 0.012 205)", "oklch(47% 0.01 205)", "oklch(59% 0.01 205)", "oklch(71% 0.008 205)", "oklch(83% 0.006 205)", "oklch(95% 0.004 205)"]
+      },
+      "warm-paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "#fffaf2",
+        "tonalRamp": ["oklch(15% 0.012 82)", "oklch(27% 0.014 82)", "oklch(39% 0.016 82)", "oklch(51% 0.018 82)", "oklch(63% 0.018 82)", "oklch(75% 0.016 82)", "oklch(87% 0.012 82)", "oklch(97% 0.008 82)"]
+      },
+      "stage-paper": {
+        "role": "neutral",
+        "displayName": "Stage Paper",
+        "canonical": "#f1ede3",
+        "tonalRamp": ["oklch(15% 0.01 82)", "oklch(27% 0.012 82)", "oklch(39% 0.014 82)", "oklch(51% 0.016 82)", "oklch(63% 0.016 82)", "oklch(75% 0.014 82)", "oklch(87% 0.01 82)", "oklch(95% 0.008 82)"]
+      },
+      "deep-teal": {
+        "role": "secondary",
+        "displayName": "Deep Teal",
+        "canonical": "#243c3f",
+        "tonalRamp": ["oklch(15% 0.025 200)", "oklch(26% 0.035 200)", "oklch(37% 0.045 200)", "oklch(48% 0.05 200)", "oklch(59% 0.045 200)", "oklch(70% 0.038 200)", "oklch(82% 0.025 200)", "oklch(94% 0.012 200)"]
+      },
+      "gift-orange": {
+        "role": "primary",
+        "displayName": "Gift Orange",
+        "canonical": "#f08b44",
+        "tonalRamp": ["oklch(15% 0.08 48)", "oklch(27% 0.12 48)", "oklch(39% 0.16 48)", "oklch(51% 0.19 48)", "oklch(63% 0.2 48)", "oklch(74% 0.18 48)", "oklch(85% 0.12 48)", "oklch(95% 0.05 48)"]
+      },
+      "ribbon-teal": {
+        "role": "secondary",
+        "displayName": "Ribbon Teal",
+        "canonical": "#43b7a9",
+        "tonalRamp": ["oklch(15% 0.05 185)", "oklch(27% 0.08 185)", "oklch(39% 0.11 185)", "oklch(51% 0.14 185)", "oklch(63% 0.15 185)", "oklch(74% 0.13 185)", "oklch(85% 0.08 185)", "oklch(95% 0.03 185)"]
+      },
+      "confetti-pink": {
+        "role": "tertiary",
+        "displayName": "Confetti Pink",
+        "canonical": "#e6426f",
+        "tonalRamp": ["oklch(15% 0.08 8)", "oklch(27% 0.13 8)", "oklch(39% 0.18 8)", "oklch(51% 0.22 8)", "oklch(63% 0.23 8)", "oklch(74% 0.19 8)", "oklch(85% 0.12 8)", "oklch(95% 0.05 8)"]
+      },
+      "confetti-cyan": {
+        "role": "tertiary",
+        "displayName": "Confetti Cyan",
+        "canonical": "#2aa5b8",
+        "tonalRamp": ["oklch(15% 0.05 215)", "oklch(27% 0.08 215)", "oklch(39% 0.11 215)", "oklch(51% 0.14 215)", "oklch(63% 0.15 215)", "oklch(74% 0.13 215)", "oklch(85% 0.08 215)", "oklch(95% 0.03 215)"]
+      },
+      "confetti-yellow": {
+        "role": "tertiary",
+        "displayName": "Confetti Yellow",
+        "canonical": "#ffc43d",
+        "tonalRamp": ["oklch(15% 0.06 85)", "oklch(27% 0.1 85)", "oklch(39% 0.14 85)", "oklch(51% 0.18 85)", "oklch(63% 0.2 85)", "oklch(74% 0.18 85)", "oklch(85% 0.12 85)", "oklch(95% 0.05 85)"]
+      },
+      "confetti-violet": {
+        "role": "tertiary",
+        "displayName": "Confetti Violet",
+        "canonical": "#6d5dfc",
+        "tonalRamp": ["oklch(15% 0.09 290)", "oklch(27% 0.14 290)", "oklch(39% 0.19 290)", "oklch(51% 0.23 290)", "oklch(63% 0.24 290)", "oklch(74% 0.2 290)", "oklch(85% 0.13 290)", "oklch(95% 0.05 290)"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Full-viewport experiment titles with tight leading."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Comparison stage and follow-up headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Short explanatory copy capped around 42rem."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Navigation, stage numbers, and rare technical kickers."
+      }
+    },
+    "shadows": [
+      {
+        "name": "gift-float",
+        "value": "drop-shadow(0 34px 36px rgb(78 49 36 / 20%))",
+        "purpose": "Grounds the complete Gift Box above its stage."
+      },
+      {
+        "name": "lifted-lid",
+        "value": "drop-shadow(18px 24px 14px rgb(99 56 35 / 18%))",
+        "purpose": "Clarifies separation after the lid opens."
+      }
+    ],
+    "motion": [
+      {
+        "name": "navigation-state",
+        "value": "180ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Hover and active color changes in shared navigation."
+      },
+      {
+        "name": "gift-open",
+        "value": "900ms cubic-bezier(.18, 1.08, .26, 1)",
+        "purpose": "Opens the Gift Box lid with a strong release."
+      },
+      {
+        "name": "confetti-burst",
+        "value": "900ms cubic-bezier(.16, 1.2, .26, 1)",
+        "purpose": "Moves confetti from the box into suspended celebration."
+      },
+      {
+        "name": "confetti-drift",
+        "value": "2200ms ease-in-out infinite alternate",
+        "purpose": "Adds subtle suspended movement after the burst."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact-navigation",
+        "value": "560px"
+      },
+      {
+        "name": "expanded-gift-stage",
+        "value": "681px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Experiment Navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "A familiar single-row site header aligned to the same page gutter as every content section.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-brand\" href=\"#\"><span class=\"ds-mark\" aria-hidden=\"true\"></span>Animation Playground</a><nav aria-label=\"Experiments\"><a class=\"ds-nav-link ds-nav-link-active\" href=\"#\" aria-current=\"page\">Gift Box</a><a class=\"ds-nav-link\" href=\"#\">Scroll Cards</a></nav></header>",
+      "css": ".ds-header { display:flex; min-height:72px; align-items:center; justify-content:flex-start; gap:48px; padding:0 clamp(20px,7vw,112px); background:#172126; color:#fffaf2; font-family:Inter,ui-sans-serif,system-ui,sans-serif; } .ds-header a { color:inherit; text-decoration:none; } .ds-brand { display:inline-flex; min-height:44px; align-items:center; gap:12px; font-size:.9375rem; font-weight:850; } .ds-mark { width:24px; height:24px; border-radius:50%; background:#e6426f; box-shadow:12px 8px 0 -3px #43b7a9,-7px 10px 0 -4px #ffc43d; } .ds-header nav { display:flex; min-height:72px; align-items:center; gap:16px; } .ds-nav-link { position:relative; display:inline-flex; min-height:44px; align-items:center; padding:0 8px; color:oklch(78% .02 82); font-size:.875rem; font-weight:700; transition:color 180ms cubic-bezier(.16,1,.3,1); } .ds-nav-link::after { position:absolute; inset:auto 8px 0; height:3px; border-radius:3px 3px 0 0; background:#f08b44; content:''; opacity:0; transform:scaleX(.55); transition:opacity 180ms cubic-bezier(.16,1,.3,1),transform 180ms cubic-bezier(.16,1,.3,1); } .ds-nav-link:hover,.ds-nav-link-active { color:#fffaf2; } .ds-nav-link-active::after { opacity:1; transform:scaleX(1); } .ds-header a:focus-visible { border-radius:4px; outline:3px solid #ffc43d; outline-offset:3px; }"
+    },
+    {
+      "name": "Motion Stage",
+      "kind": "custom",
+      "description": "An edge-to-edge viewport that gives one motion experiment a committed color field.",
+      "html": "<section class=\"ds-motion-stage\"><div><p class=\"ds-kicker\">Browser motion study</p><h2>Scroll Card Gallery</h2><p>One motion contract, explored through two browser animation systems.</p></div></section>",
+      "css": ".ds-motion-stage { display:grid; min-height:520px; place-items:end start; padding:72px; color:#fffaf2; background:linear-gradient(135deg,#315e68 0%,#987245 48%,#913f4e 100%); font-family:Inter,ui-sans-serif,system-ui,sans-serif; } .ds-motion-stage div { max-width:48rem; } .ds-motion-stage h2 { max-width:11ch; margin:0; font-size:clamp(3.5rem,10vw,8.5rem); line-height:.92; } .ds-motion-stage p:last-child { max-width:42rem; font-size:1.2rem; line-height:1.55; } .ds-kicker { margin:0 0 16px; font-size:.75rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }"
+    },
+    {
+      "name": "Confetti Accent Set",
+      "kind": "custom",
+      "description": "Four compact geometric shapes that concentrate the loudest palette colors.",
+      "html": "<div class=\"ds-confetti-set\" aria-hidden=\"true\"><span class=\"ds-ribbon\"></span><span class=\"ds-dot\"></span><span class=\"ds-shard\"></span><span class=\"ds-plus\"></span></div>",
+      "css": ".ds-confetti-set { display:flex; align-items:center; gap:20px; padding:32px; background:#fffaf2; } .ds-confetti-set span { display:block; width:24px; height:24px; } .ds-ribbon { border-radius:999px; background:#e6426f; transform:rotate(-24deg); } .ds-dot { border-radius:50%; background:#2aa5b8; } .ds-shard { clip-path:polygon(50% 0,100% 100%,0 74%); background:#ffc43d; transform:rotate(18deg); } .ds-plus { border-radius:4px; background:linear-gradient(#fffaf2 0 0) center / 34% 100% no-repeat,linear-gradient(#fffaf2 0 0) center / 100% 34% no-repeat,#6d5dfc; transform:rotate(12deg); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Motion Workshop",
+    "overview": "Animation Playground feels like a working studio where designers and frontend developers test bold motion ideas at full scale. The system is cheerful, confident, and loud: large type, decisive full-viewport compositions, saturated color, and generous spatial pacing give every experiment a clear stage.\n\nThe surrounding interface is intentionally direct. Navigation and explanatory copy use familiar structures so the animation can be strange without the experience becoming confusing. Muted corporate styling, generic SaaS landing pages, and dashboard-like interfaces are explicitly rejected.",
+    "keyCharacteristics": [
+      "Full-palette color with warm orange and teal as recurring anchors.",
+      "Oversized sans-serif typography with tight, assertive line-height.",
+      "One dominant motion idea per viewport.",
+      "Flat structural surfaces with depth reserved for illustrated objects.",
+      "Clear semantic navigation, strong focus states, and reduced-motion support."
+    ],
+    "rules": [
+      {
+        "name": "The Experiment Leads Rule",
+        "body": "Interface chrome must frame the motion experiment, never compete with it.",
+        "section": "overview"
+      },
+      {
+        "name": "The Full-Volume Rule",
+        "body": "Use the palette decisively. A vibrant hue must carry a meaningful surface, object, or state rather than appearing as timid decoration.",
+        "section": "overview"
+      },
+      {
+        "name": "The Anchor-and-Burst Rule",
+        "body": "Orange and teal establish the composition. Pink, cyan, yellow, and violet appear in compact bursts, never as an evenly distributed rainbow.",
+        "section": "colors"
+      },
+      {
+        "name": "The Contrast Rule",
+        "body": "Every text and interactive pairing must meet WCAG AA. Loud color never excuses weak readability.",
+        "section": "colors"
+      },
+      {
+        "name": "The Scale Does the Talking Rule",
+        "body": "Do not add decorative type treatments. Establish hierarchy through size, weight, width, and spacing.",
+        "section": "typography"
+      },
+      {
+        "name": "The Rare Kicker Rule",
+        "body": "Uppercase tracked labels are reserved for genuine metadata such as “Browser motion study,” not repeated above every heading.",
+        "section": "typography"
+      },
+      {
+        "name": "The Illustrated Depth Rule",
+        "body": "Never apply ambient card shadows to navigation, text panels, or content sections. Shadows describe physical motion, not generic importance.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do let each motion experiment be the main event.",
+      "Do use Gift Orange and Ribbon Teal as structural anchors, then deploy the other accents in concentrated bursts.",
+      "Do use full-viewport color fields and large type to create confident pacing.",
+      "Do preserve semantic landmarks, aria-current, visible keyboard focus, and reduced-motion behavior.",
+      "Do maximize Lighthouse accessibility, performance, best-practices, and SEO scores.",
+      "Do keep content copy within 65 characters or approximately 42rem."
+    ],
+    "donts": [
+      "Don't imitate muted corporate sites.",
+      "Don't use generic SaaS landing pages as a visual reference.",
+      "Don't make the experience resemble dashboard-like interfaces.",
+      "Don't distribute every bright color evenly across every screen; that turns energy into noise.",
+      "Don't put content inside generic rounded cards when a full-stage composition communicates the idea.",
+      "Don't use ambient shadows on structural interface surfaces.",
+      "Don't use gradient text, decorative glassmorphism, colored side-stripe borders, or repeated tiny uppercase kickers.",
+      "Don't add motion that ignores prefers-reduced-motion."
+    ]
+  }
+}

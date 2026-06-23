@@ -1,6 +1,11 @@
 ---
 const title = Astro.props.title;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pathname = Astro.url.pathname;
+const homePath = `${base}/`;
+const scrollCardsPath = `${base}/scroll-cards/`;
+const isHome = pathname === homePath;
+const isScrollCards = pathname === scrollCardsPath;
 ---
 
 <!doctype html>
@@ -14,15 +19,215 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 		<title>{title} | Animation Playground</title>
 	</head>
 	<body>
+		<header class="site-header">
+			<div class="header-inner">
+				<a class="site-name" href={homePath} aria-label="Animation Playground home">
+					<span class="site-mark" aria-hidden="true">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+					<span class="site-name-full">Animation Playground</span>
+					<span class="site-name-short">Playground</span>
+				</a>
+				<nav aria-label="Experiments">
+					<a href={homePath} aria-current={isHome ? 'page' : undefined}>Gift Box</a>
+					<a href={scrollCardsPath} aria-current={isScrollCards ? 'page' : undefined}>Scroll Cards</a>
+				</nav>
+			</div>
+		</header>
 		<slot />
 	</body>
 </html>
 
 <style>
+	:root {
+		--header-background: oklch(19% 0.025 205);
+		--header-text: oklch(96% 0.018 82);
+		--header-muted: oklch(78% 0.02 82);
+		--header-accent: oklch(72% 0.2 38);
+		--header-focus: oklch(88% 0.16 94);
+		--page-gutter: clamp(20px, 7vw, 112px);
+	}
+
 	html,
 	body {
 		margin: 0;
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
+	}
+
+	.site-header {
+		position: relative;
+		z-index: 10;
+		border-bottom: 1px solid oklch(100% 0 0 / 12%);
+		font-family:
+			Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		background: var(--header-background);
+		color: var(--header-text);
+	}
+
+	.header-inner {
+		display: flex;
+		width: 100%;
+		min-height: 72px;
+		align-items: center;
+		justify-content: flex-start;
+		gap: clamp(28px, 5vw, 72px);
+		box-sizing: border-box;
+		padding-inline: var(--page-gutter);
+	}
+
+	.site-header a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.site-name {
+		display: inline-flex;
+		min-height: 44px;
+		align-items: center;
+		gap: 12px;
+		flex: 0 0 auto;
+		font-size: 0.9375rem;
+		font-weight: 850;
+		letter-spacing: -0.01em;
+	}
+
+	.site-name-short {
+		display: none;
+	}
+
+	.site-mark {
+		position: relative;
+		display: block;
+		width: 28px;
+		height: 28px;
+		flex: 0 0 auto;
+	}
+
+	.site-mark span {
+		position: absolute;
+		display: block;
+		width: 13px;
+		height: 13px;
+	}
+
+	.site-mark span:nth-child(1) {
+		inset: 1px auto auto 1px;
+		border-radius: 50%;
+		background: oklch(70% 0.2 8);
+	}
+
+	.site-mark span:nth-child(2) {
+		inset: 1px 1px auto auto;
+		background: oklch(80% 0.18 85);
+		clip-path: polygon(50% 0, 100% 100%, 0 74%);
+	}
+
+	.site-mark span:nth-child(3) {
+		inset: auto 2px 1px auto;
+		border-radius: 3px;
+		background: oklch(69% 0.13 185);
+		transform: rotate(12deg);
+	}
+
+	.site-header nav {
+		display: flex;
+		min-height: 72px;
+		align-items: center;
+		gap: clamp(8px, 1.5vw, 20px);
+	}
+
+	.site-header nav a {
+		position: relative;
+		display: inline-flex;
+		min-height: 44px;
+		align-items: center;
+		padding-inline: 8px;
+		color: var(--header-muted);
+		font-size: 0.875rem;
+		font-weight: 700;
+		transition: color 180ms cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.site-header nav a::after {
+		position: absolute;
+		inset: auto 8px 0;
+		height: 3px;
+		border-radius: 3px 3px 0 0;
+		background: var(--header-accent);
+		content: '';
+		opacity: 0;
+		transform: scaleX(0.55);
+		transition:
+			opacity 180ms cubic-bezier(0.16, 1, 0.3, 1),
+			transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.site-header nav a:hover {
+		color: var(--header-text);
+	}
+
+	.site-header nav a[aria-current='page'] {
+		color: var(--header-text);
+	}
+
+	.site-header nav a[aria-current='page']::after {
+		opacity: 1;
+		transform: scaleX(1);
+	}
+
+	.site-header nav a:active {
+		color: var(--header-accent);
+	}
+
+	.site-header a:focus-visible {
+		border-radius: 4px;
+		outline: 3px solid var(--header-focus);
+		outline-offset: 3px;
+	}
+
+	@media (max-width: 560px) {
+		.header-inner {
+			min-height: 64px;
+			gap: 12px;
+		}
+
+		.site-header nav {
+			min-height: 64px;
+			gap: 2px;
+		}
+
+		.site-header nav a {
+			padding-inline: 7px;
+			font-size: 0.875rem;
+		}
+	}
+
+	@media (max-width: 430px) {
+		.site-name {
+			gap: 9px;
+		}
+
+		.site-name-full {
+			display: none;
+		}
+
+		.site-name-short {
+			display: inline;
+		}
+	}
+
+	@media (max-width: 360px) {
+		.site-name-short {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip: rect(0 0 0 0);
+			clip-path: inset(50%);
+			white-space: nowrap;
+		}
 	}
 </style>
