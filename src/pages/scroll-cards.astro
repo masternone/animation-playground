@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import CardStream from '../components/CardStream.astro';
 ---
 
 <Layout title="Scroll Card Gallery">
@@ -21,7 +22,9 @@ import Layout from '../layouts/Layout.astro';
 				<h2 id="gsap-title">GSAP ScrollTrigger</h2>
 				<p>Scripted timelines with pinning, scrubbing, and precise choreography.</p>
 			</div>
-			<div class="stage-slot" data-card-stream-slot aria-hidden="true"></div>
+			<div class="stage-slot">
+				<CardStream />
+			</div>
 		</section>
 
 		<section class="comparison-stage comparison-stage--css" data-css-stage aria-labelledby="css-title">
@@ -30,7 +33,9 @@ import Layout from '../layouts/Layout.astro';
 				<h2 id="css-title">CSS Scroll-Driven Animations</h2>
 				<p>Native browser timelines tied directly to scroll and view progress.</p>
 			</div>
-			<div class="stage-slot" data-card-stream-slot aria-hidden="true"></div>
+			<div class="stage-slot">
+				<CardStream />
+			</div>
 		</section>
 	</main>
 </Layout>
@@ -89,6 +94,7 @@ import Layout from '../layouts/Layout.astro';
 	.comparison-stage {
 		position: relative;
 		display: grid;
+		grid-template-columns: minmax(0, 1fr);
 		min-height: 100svh;
 		align-content: start;
 		overflow: hidden;
@@ -134,9 +140,6 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.stage-slot {
-		min-height: 42svh;
 		margin-top: clamp(48px, 8vw, 112px);
-		border-block: 1px solid currentColor;
-		opacity: 0.18;
 	}
 </style>

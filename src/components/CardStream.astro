@@ -1,0 +1,35 @@
+---
+import MotionConceptCard from './MotionConceptCard.astro';
+import { motionConceptCards } from '../content/motionConceptCards';
+---
+
+<div class="card-stream" data-card-stream role="list" aria-label="Motion concepts">
+	{
+		motionConceptCards.map((card, index) => (
+			<MotionConceptCard
+				title={card.title}
+				description={card.description}
+				image={card.image}
+				streamIndex={index}
+			/>
+		))
+	}
+</div>
+
+<style>
+	.card-stream {
+		display: flex;
+		width: max-content;
+		max-width: none;
+		align-items: flex-start;
+		gap: clamp(16px, 2.4vw, 36px);
+		margin-inline: calc(var(--page-gutter) * -1);
+		padding: 0 var(--page-gutter) clamp(96px, 12vw, 176px);
+	}
+
+	@media (max-width: 640px) {
+		.card-stream {
+			gap: 14px;
+		}
+	}
+</style>
