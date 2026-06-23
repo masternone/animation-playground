@@ -34,7 +34,7 @@ import CardStream from '../components/CardStream.astro';
 				<p>Native browser timelines tied directly to scroll and view progress.</p>
 			</div>
 			<div class="stage-slot">
-				<CardStream />
+				<CardStream implementation="css" />
 			</div>
 		</section>
 	</main>
@@ -108,8 +108,16 @@ import CardStream from '../components/CardStream.astro';
 	}
 
 	.comparison-stage--css {
+		overflow: clip;
 		color: #f5f0e6;
 		background: #243c3f;
+	}
+
+	.comparison-stage--css .stage-heading {
+		position: sticky;
+		top: clamp(24px, 5svh, 52px);
+		z-index: 5;
+		max-width: min(46rem, 58vw);
 	}
 
 	.stage-heading {
@@ -141,5 +149,12 @@ import CardStream from '../components/CardStream.astro';
 
 	.stage-slot {
 		margin-top: clamp(48px, 8vw, 112px);
+	}
+
+	@media (max-width: 640px) {
+		.comparison-stage--css .stage-heading {
+			top: 20px;
+			max-width: 100%;
+		}
 	}
 </style>

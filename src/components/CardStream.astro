@@ -1,22 +1,65 @@
 ---
 import MotionConceptCard from './MotionConceptCard.astro';
 import { motionConceptCards } from '../content/motionConceptCards';
+
+interface Props {
+	implementation?: 'static' | 'css';
+}
+
+const { implementation = 'static' } = Astro.props;
+const isCssImplementation = implementation === 'css';
 ---
 
-<div class="card-stream" data-card-stream role="list" aria-label="Motion concepts">
+<div
+	class:list={[
+		'card-stream-scene',
+		isCssImplementation && 'card-stream-scene--css',
+	]}
+>
 	{
-		motionConceptCards.map((card, index) => (
-			<MotionConceptCard
-				title={card.title}
-				description={card.description}
-				image={card.image}
-				streamIndex={index}
-			/>
-		))
+		isCssImplementation && (
+			<p class="motion-support-note">
+				This Card Stream is shown without scroll-linked motion because this browser does not support
+				CSS Scroll-Driven Animations.
+			</p>
+		)
 	}
+	<div class="card-stream-stage">
+		<div class="card-stream" data-card-stream role="list" aria-label="Motion concepts">
+			{
+				motionConceptCards.map((card, index) => (
+					<MotionConceptCard
+						title={card.title}
+						description={card.description}
+						image={card.image}
+						streamIndex={index}
+					/>
+				))
+			}
+		</div>
+	</div>
 </div>
 
 <style>
+	.card-stream-scene {
+		position: relative;
+	}
+
+	.card-stream-stage {
+		position: relative;
+	}
+
+	.motion-support-note {
+		display: block;
+		max-width: 48ch;
+		margin: 0 0 32px;
+		padding: 16px 18px;
+		border: 1px solid oklch(92% 0.025 82 / 32%);
+		background: oklch(19% 0.025 205 / 32%);
+		font-size: 0.9375rem;
+		line-height: 1.5;
+	}
+
 	.card-stream {
 		display: flex;
 		width: max-content;
@@ -27,9 +70,183 @@ import { motionConceptCards } from '../content/motionConceptCards';
 		padding: 0 var(--page-gutter) clamp(96px, 12vw, 176px);
 	}
 
+	.card-stream-scene--css .card-stream {
+		display: grid;
+		width: 100%;
+		grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+		margin-inline: 0;
+		padding-inline: 0;
+	}
+
+	.card-stream-scene--css .card-stream :global(.motion-concept-card) {
+		width: 100%;
+		transform: none;
+	}
+
+	@supports (animation-timeline: view()) {
+		.card-stream-scene--css {
+			min-height: 600svh;
+			view-timeline-name: --css-card-stream;
+			view-timeline-axis: block;
+		}
+
+		.card-stream-scene--css .motion-support-note {
+			display: none;
+		}
+
+		.card-stream-scene--css .card-stream-stage {
+			position: sticky;
+			top: 0;
+			display: grid;
+			min-height: 100svh;
+			align-items: center;
+			overflow: clip;
+		}
+
+		.card-stream-scene--css .card-stream {
+			position: relative;
+			display: block;
+			width: 100%;
+			height: min(72svh, 720px);
+			margin-inline: 0;
+			padding: 0;
+		}
+
+		.card-stream-scene--css .card-stream :global(.motion-concept-card) {
+			--stream-lane: 0svh;
+
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: clamp(260px, 29vw, 420px);
+			opacity: 0;
+			transform: translate3d(calc(-50% + 70vw), calc(-50% + var(--stream-lane)), 0)
+				rotate(3deg) scale(0.96);
+			will-change: transform, opacity;
+			animation-name: css-card-flow;
+			animation-duration: 1ms;
+			animation-timing-function: linear;
+			animation-fill-mode: both;
+			animation-timeline: --css-card-stream;
+		}
+
+		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(1)) {
+			--stream-lane: -9svh;
+			animation-range: 8% 40%;
+		}
+
+		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(2)) {
+			--stream-lane: -4svh;
+			animation-range: 18% 50%;
+		}
+
+		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(3)) {
+			--stream-lane: 2svh;
+			animation-range: 28% 60%;
+		}
+
+		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(4)) {
+			--stream-lane: 7svh;
+			animation-range: 38% 70%;
+		}
+
+		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(5)) {
+			--stream-lane: -2svh;
+			animation-range: 48% 80%;
+		}
+
+		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(6)) {
+			--stream-lane: 5svh;
+			animation-range: 58% 90%;
+		}
+	}
+
+	@keyframes css-card-flow {
+		0% {
+			z-index: 0;
+			opacity: 0;
+			transform: translate3d(calc(-50% + 70vw), calc(-50% + var(--stream-lane) + 8svh), 0)
+				rotate(3deg) scale(0.96);
+		}
+
+		22% {
+			z-index: 1;
+			opacity: 0.72;
+			transform: translate3d(calc(-50% + 32vw), calc(-50% + var(--stream-lane) + 3svh), 0)
+				rotate(1deg) scale(0.985);
+		}
+
+		38%,
+		54% {
+			z-index: 3;
+			opacity: 1;
+			transform: translate3d(calc(-50% + 18vw), calc(-50% + var(--stream-lane)), 0)
+				rotate(0deg) scale(1);
+		}
+
+		68% {
+			z-index: 2;
+			opacity: 0.48;
+			transform: translate3d(calc(-50% - 2vw), calc(-50% + var(--stream-lane) - 5svh), 0)
+				rotate(-1deg) scale(0.99);
+		}
+
+		80% {
+			z-index: 1;
+			opacity: 0.1;
+			transform: translate3d(calc(-50% - 24vw), calc(-50% + var(--stream-lane) - 11svh), 0)
+				rotate(-2deg) scale(0.975);
+		}
+
+		100% {
+			z-index: 0;
+			opacity: 0;
+			transform: translate3d(calc(-50% - 70vw), calc(-50% + var(--stream-lane) - 20svh), 0)
+				rotate(-3deg) scale(0.96);
+		}
+	}
+
 	@media (max-width: 640px) {
 		.card-stream {
 			gap: 14px;
+		}
+
+		.card-stream-scene--css .card-stream :global(.motion-concept-card) {
+			width: min(76vw, 320px);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.card-stream-scene--css {
+			min-height: auto;
+			view-timeline-name: none;
+		}
+
+		.card-stream-scene--css .card-stream-stage {
+			position: relative;
+			top: auto;
+			display: block;
+			min-height: auto;
+			overflow: visible;
+		}
+
+		.card-stream-scene--css .card-stream {
+			display: grid;
+			width: 100%;
+			height: auto;
+			grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+			margin-inline: 0;
+			padding: 0;
+		}
+
+		.card-stream-scene--css .card-stream :global(.motion-concept-card) {
+			position: relative;
+			inset: auto;
+			width: 100%;
+			opacity: 1;
+			transform: none;
+			animation: none;
+			will-change: auto;
 		}
 	}
 </style>
