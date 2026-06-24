@@ -56,8 +56,12 @@ test('each Motion Concept Card presents an optimized image with useful alternati
 		assert.equal(occurrences.length, 2, `${title} should have an image in each Card Stream`);
 	}
 
-	assert.equal((comparisonPage.match(/<img /g) ?? []).length, 12);
-	assert.equal((comparisonPage.match(/<img [^>]*width="\d+"[^>]*height="\d+"/g) ?? []).length, 12);
+	assert.equal(
+		(comparisonPage.match(/<img [^>]*alt="[^"]+ concept illustration"/g) ?? []).length,
+		12,
+	);
+	assert.equal((comparisonPage.match(/<img /g) ?? []).length, 13);
+	assert.equal((comparisonPage.match(/<img [^>]*width="\d+"[^>]*height="\d+"/g) ?? []).length, 13);
 });
 
 test('both implementations expose the same accessible staggered Card Stream contract', async () => {
@@ -71,6 +75,16 @@ test('both implementations expose the same accessible staggered Card Stream cont
 		const stagger = `style="--stream-index: ${index}"`;
 		assert.equal((comparisonPage.match(new RegExp(stagger, 'g')) ?? []).length, 2);
 	}
+});
+
+test('the Motion Comparison renders its generated Hero Image', async () => {
+	const comparisonPage = await readComparisonPage();
+
+	assert.match(
+		comparisonPage,
+		/<img [^>]*src="[^"]*scroll-cards-hero[^"]*"[^>]*alt="Layered motion cards sweeping across a colorful browser animation stage"/,
+	);
+	assert.match(comparisonPage, /loading="eager"/);
 });
 
 test('the GSAP implementation gives its Card Stream a pinned viewport stage', async () => {
