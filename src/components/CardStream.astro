@@ -3,18 +3,28 @@ import MotionConceptCard from './MotionConceptCard.astro';
 import { motionConceptCards } from '../content/motionConceptCards';
 
 interface Props {
-	implementation?: 'static' | 'css';
+	implementation?: 'static' | 'css' | 'gsap';
 }
 
 const { implementation = 'static' } = Astro.props;
 const isCssImplementation = implementation === 'css';
+const isGsapImplementation = implementation === 'gsap';
+const motionRanges = ['4 36', '14 46', '24 56', '34 66', '44 76', '54 88'];
+const motionLanes = [-10, -4, 2, 7, -2, 5];
+const stickyReleaseProgress = 0.74;
+const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgress)) * 100).toFixed(3)}svh`;
 ---
 
 <div
 	class:list={[
 		'card-stream-scene',
+		isGsapImplementation && 'card-stream-scene--gsap',
 		isCssImplementation && 'card-stream-scene--css',
 	]}
+	style={isGsapImplementation || isCssImplementation
+		? `--card-stream-scene-height: ${animatedSceneHeight}`
+		: undefined}
+	data-gsap-card-stream-scene={isGsapImplementation ? true : undefined}
 >
 	{
 		isCssImplementation && (
@@ -24,7 +34,10 @@ const isCssImplementation = implementation === 'css';
 			</p>
 		)
 	}
-	<div class="card-stream-stage">
+	<div
+		class="card-stream-stage"
+		data-gsap-card-stream-stage={isGsapImplementation ? true : undefined}
+	>
 		<div class="card-stream" data-card-stream role="list" aria-label="Motion concepts">
 			{
 				motionConceptCards.map((card, index) => (
@@ -33,12 +46,176 @@ const isCssImplementation = implementation === 'css';
 						description={card.description}
 						image={card.image}
 						streamIndex={index}
+						motionRange={isGsapImplementation ? motionRanges[index] : undefined}
+						motionLane={isGsapImplementation ? motionLanes[index] : undefined}
 					/>
 				))
 			}
 		</div>
 	</div>
 </div>
+
+<script>
+	import gsap from 'gsap';
+	import ScrollTrigger from 'gsap/ScrollTrigger';
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	const motion = gsap.matchMedia();
+
+	motion.add('(prefers-reduced-motion: no-preference)', () => {
+		const scenes = document.querySelectorAll<HTMLElement>('[data-gsap-card-stream-scene]');
+		const timelines: gsap.core.Timeline[] = [];
+		const pinTriggers: ScrollTrigger[] = [];
+
+		scenes.forEach((scene) => {
+			const stage = scene.querySelector<HTMLElement>('[data-gsap-card-stream-stage]');
+			const cards = [...scene.querySelectorAll<HTMLElement>('.motion-concept-card')];
+
+			if (!stage) return;
+
+			const pinTrigger = ScrollTrigger.create({
+				trigger: scene,
+				start: 'top top',
+				end: 'bottom bottom',
+				pin: stage,
+				pinSpacing: false,
+				anticipatePin: 1,
+				invalidateOnRefresh: true,
+			});
+			const playhead = { progress: 0 };
+			const timeline = gsap.timeline({
+				scrollTrigger: {
+					trigger: scene,
+					start: 'top bottom',
+					end: 'bottom top',
+					scrub: true,
+					invalidateOnRefresh: true,
+				},
+			});
+
+			timeline.to(playhead, { progress: 1, duration: 1, ease: 'none' }, 0);
+
+			cards.forEach((card) => {
+				const [rangeStart = 0, rangeEnd = 100] = (card.dataset.motionRange ?? '0 100')
+					.split(' ')
+					.map(Number);
+				const lane = Number(card.dataset.motionLane ?? 0);
+				const start = rangeStart / 100;
+				const span = (rangeEnd - rangeStart) / 100;
+				const position = (progress: number) => start + span * progress;
+
+				timeline.set(
+					card,
+					{
+						xPercent: -50,
+						yPercent: -50,
+						x: '70vw',
+						y: `${lane + 8}svh`,
+						rotation: 3,
+						scale: 0.96,
+						opacity: 0,
+						zIndex: 0,
+					},
+					0,
+				);
+				timeline.to(
+					card,
+					{
+						x: '32vw',
+						y: `${lane + 3}svh`,
+						rotation: 1,
+						scale: 0.985,
+						opacity: 0.72,
+						zIndex: 1,
+						duration: span * 0.22,
+						ease: 'none',
+					},
+					position(0),
+				);
+				timeline.to(
+					card,
+					{
+						x: '18vw',
+						y: `${lane}svh`,
+						rotation: 0,
+						scale: 1,
+						opacity: 1,
+						zIndex: 3,
+						duration: span * 0.16,
+						ease: 'none',
+					},
+					position(0.22),
+				);
+				timeline.to(
+					card,
+					{
+						x: '18vw',
+						y: `${lane}svh`,
+						opacity: 1,
+						zIndex: 3,
+						duration: span * 0.16,
+						ease: 'none',
+					},
+					position(0.38),
+				);
+				timeline.to(
+					card,
+					{
+						x: '-2vw',
+						y: `${lane - 5}svh`,
+						rotation: -1,
+						scale: 0.99,
+						opacity: 0.48,
+						zIndex: 2,
+						duration: span * 0.14,
+						ease: 'none',
+					},
+					position(0.54),
+				);
+				timeline.to(
+					card,
+					{
+						x: '-24vw',
+						y: `${lane - 11}svh`,
+						rotation: -2,
+						scale: 0.975,
+						opacity: 0.1,
+						zIndex: 1,
+						duration: span * 0.12,
+						ease: 'none',
+					},
+					position(0.68),
+				);
+				timeline.to(
+					card,
+					{
+						x: '-96vw',
+						y: `${lane - 20}svh`,
+						rotation: -3,
+						scale: 0.96,
+						opacity: 0,
+						zIndex: 0,
+						duration: span * 0.2,
+						ease: 'none',
+					},
+					position(0.8),
+				);
+			});
+
+			timelines.push(timeline);
+			pinTriggers.push(pinTrigger);
+		});
+
+		return () => {
+			timelines.forEach((timeline) => {
+				timeline.scrollTrigger?.kill();
+				timeline.kill();
+			});
+			pinTriggers.forEach((trigger) => trigger.kill());
+		};
+	});
+</script>
 
 <style>
 	.card-stream-scene {
@@ -83,9 +260,44 @@ const isCssImplementation = implementation === 'css';
 		transform: none;
 	}
 
+	.card-stream-scene--gsap {
+		min-height: var(--card-stream-scene-height);
+	}
+
+	.card-stream-scene--gsap .card-stream-stage {
+		position: relative;
+		display: grid;
+		min-height: 100svh;
+		align-items: center;
+		overflow: clip;
+	}
+
+	.card-stream-scene--gsap .card-stream {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: min(72svh, 720px);
+		margin-inline: 0;
+		padding: 0;
+	}
+
+	.card-stream-scene--gsap .card-stream :global(.motion-concept-card) {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		will-change: transform, opacity;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.card-stream-scene--gsap .card-stream :global(.motion-concept-card) {
+			opacity: 0;
+		}
+	}
+
 	@supports (animation-timeline: view()) {
 		.card-stream-scene--css {
-			min-height: 600svh;
+			min-height: var(--card-stream-scene-height);
 			view-timeline-name: --css-card-stream;
 			view-timeline-axis: block;
 		}
@@ -120,7 +332,7 @@ const isCssImplementation = implementation === 'css';
 			left: 50%;
 			width: clamp(260px, 29vw, 420px);
 			opacity: 0;
-			transform: translate3d(calc(-50% + 70vw), calc(-50% + var(--stream-lane)), 0)
+			transform: translate3d(calc(-50% + 70vw), calc(-50% + var(--stream-lane) + 8svh), 0)
 				rotate(3deg) scale(0.96);
 			will-change: transform, opacity;
 			animation-name: css-card-flow;
@@ -131,33 +343,33 @@ const isCssImplementation = implementation === 'css';
 		}
 
 		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(1)) {
-			--stream-lane: -9svh;
-			animation-range: 8% 40%;
+			--stream-lane: -10svh;
+			animation-range: 4% 36%;
 		}
 
 		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(2)) {
 			--stream-lane: -4svh;
-			animation-range: 18% 50%;
+			animation-range: 14% 46%;
 		}
 
 		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(3)) {
 			--stream-lane: 2svh;
-			animation-range: 28% 60%;
+			animation-range: 24% 56%;
 		}
 
 		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(4)) {
 			--stream-lane: 7svh;
-			animation-range: 38% 70%;
+			animation-range: 34% 66%;
 		}
 
 		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(5)) {
 			--stream-lane: -2svh;
-			animation-range: 48% 80%;
+			animation-range: 44% 76%;
 		}
 
 		.card-stream-scene--css .card-stream :global(.motion-concept-card:nth-child(6)) {
 			--stream-lane: 5svh;
-			animation-range: 58% 90%;
+			animation-range: 54% 88%;
 		}
 	}
 
@@ -201,7 +413,7 @@ const isCssImplementation = implementation === 'css';
 		100% {
 			z-index: 0;
 			opacity: 0;
-			transform: translate3d(calc(-50% - 70vw), calc(-50% + var(--stream-lane) - 20svh), 0)
+			transform: translate3d(calc(-50% - 96vw), calc(-50% + var(--stream-lane) - 20svh), 0)
 				rotate(-3deg) scale(0.96);
 		}
 	}
@@ -217,6 +429,36 @@ const isCssImplementation = implementation === 'css';
 	}
 
 	@media (prefers-reduced-motion: reduce) {
+		.card-stream-scene--gsap {
+			min-height: auto;
+		}
+
+		.card-stream-scene--gsap .card-stream-stage {
+			position: relative;
+			top: auto;
+			display: block;
+			min-height: auto;
+			overflow: visible;
+		}
+
+		.card-stream-scene--gsap .card-stream {
+			display: grid;
+			width: 100%;
+			height: auto;
+			grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+			margin-inline: 0;
+			padding: 0;
+		}
+
+		.card-stream-scene--gsap .card-stream :global(.motion-concept-card) {
+			position: relative;
+			inset: auto;
+			width: 100%;
+			opacity: 1;
+			transform: none;
+			will-change: auto;
+		}
+
 		.card-stream-scene--css {
 			min-height: auto;
 			view-timeline-name: none;

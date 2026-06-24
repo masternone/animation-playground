@@ -23,7 +23,7 @@ import CardStream from '../components/CardStream.astro';
 				<p>Scripted timelines with pinning, scrubbing, and precise choreography.</p>
 			</div>
 			<div class="stage-slot">
-				<CardStream />
+				<CardStream implementation="gsap" />
 			</div>
 		</section>
 
@@ -36,6 +36,11 @@ import CardStream from '../components/CardStream.astro';
 			<div class="stage-slot">
 				<CardStream implementation="css" />
 			</div>
+		</section>
+
+		<section class="scroll-panel" aria-label="Follow-up content">
+			<h2>Animation Playground</h2>
+			<p>Scroll back to compare the motion contract again, then drift down to leave the Card Stream behind.</p>
 		</section>
 	</main>
 </Layout>
@@ -103,6 +108,7 @@ import CardStream from '../components/CardStream.astro';
 	}
 
 	.comparison-stage--gsap {
+		overflow: clip;
 		color: #17191a;
 		background: #f1ede3;
 	}
@@ -113,6 +119,7 @@ import CardStream from '../components/CardStream.astro';
 		background: #243c3f;
 	}
 
+	.comparison-stage--gsap .stage-heading,
 	.comparison-stage--css .stage-heading {
 		position: sticky;
 		top: clamp(24px, 5svh, 52px);
@@ -132,7 +139,7 @@ import CardStream from '../components/CardStream.astro';
 		font-weight: 800;
 	}
 
-	h2 {
+	.stage-heading h2 {
 		margin: 0;
 		font-size: clamp(2.5rem, 7vw, 6.5rem);
 		line-height: 0.98;
@@ -151,7 +158,36 @@ import CardStream from '../components/CardStream.astro';
 		margin-top: clamp(48px, 8vw, 112px);
 	}
 
+	.scroll-panel {
+		display: grid;
+		min-height: 80svh;
+		align-content: center;
+		justify-content: start;
+		justify-items: start;
+		padding: 64px var(--page-gutter);
+		text-align: left;
+		background: #172126;
+		color: #fffaf2;
+	}
+
+	.scroll-panel h2 {
+		margin: 0;
+		font-size: clamp(2.5rem, 8vw, 7rem);
+		font-weight: 800;
+		line-height: normal;
+		letter-spacing: 0;
+	}
+
+	.scroll-panel p {
+		max-width: 40rem;
+		margin: 20px 0 0;
+		font-size: clamp(1rem, 2vw, 1.25rem);
+		line-height: 1.6;
+		color: rgb(255 250 242 / 78%);
+	}
+
 	@media (max-width: 640px) {
+		.comparison-stage--gsap .stage-heading,
 		.comparison-stage--css .stage-heading {
 			top: 20px;
 			max-width: 100%;

@@ -10,13 +10,21 @@ const readComparisonPage = async () => {
 	const stylesheetPaths = [...comparisonPage.matchAll(/href="([^"]+scroll-cards\.[^"]+\.css)"/g)].map(
 		([, path]) => path,
 	);
+	const scriptPaths = [...comparisonPage.matchAll(/src="([^"]+CardStream[^"]+\.js)"/g)].map(
+		([, path]) => path,
+	);
 	const stylesheets = await Promise.all(
 		stylesheetPaths.map((path) =>
 			readFile(new URL(`../dist${path.replace('/animation-playground', '')}`, import.meta.url), 'utf8'),
 		),
 	);
+	const scripts = await Promise.all(
+		scriptPaths.map((path) =>
+			readFile(new URL(`../dist${path.replace('/animation-playground', '')}`, import.meta.url), 'utf8'),
+		),
+	);
 
-	return [comparisonPage, ...stylesheets].join('\n');
+	return [comparisonPage, ...scripts, ...stylesheets].join('\n');
 };
 
 const cardTitles = [
@@ -65,6 +73,106 @@ test('both implementations expose the same accessible staggered Card Stream cont
 	}
 });
 
+test('the GSAP implementation gives its Card Stream a pinned viewport stage', async () => {
+	const comparisonPage = await readComparisonPage();
+
+	assert.match(
+		comparisonPage,
+		/data-gsap-stage[\s\S]*?class="card-stream-scene card-stream-scene--gsap"/,
+	);
+	assert.match(
+		comparisonPage,
+		/\.card-stream-scene--gsap[^{]*\{[^}]*min-height:var\(--card-stream-scene-height\)/,
+	);
+	assert.match(
+		comparisonPage,
+		/\.card-stream-scene--gsap[^{]* \.card-stream-stage[^{]*\{[^}]*min-height:100svh/,
+	);
+});
+
+test('the GSAP Card Stream is wired to a scroll-scrubbed ScrollTrigger timeline', async () => {
+	const comparisonPage = await readComparisonPage();
+	const packageJson = JSON.parse(
+		await readFile(new URL('../package.json', import.meta.url), 'utf8'),
+	);
+
+	assert.ok(packageJson.dependencies.gsap, 'GSAP should be a production dependency');
+	assert.match(
+		comparisonPage,
+		/data-gsap-card-stream-scene[\s\S]*?data-gsap-card-stream-stage[\s\S]*?data-card-stream/,
+	);
+});
+
+test('the GSAP cards follow the same staggered motion ranges as the CSS Card Stream', async () => {
+	const comparisonPage = await readComparisonPage();
+	const gsapSection = comparisonPage.match(/data-gsap-stage([\s\S]*?)data-css-stage/)?.[1];
+	const ranges = ['4 36', '14 46', '24 56', '34 66', '44 76', '54 88'];
+	const lanes = ['-10', '-4', '2', '7', '-2', '5'];
+
+	assert.ok(gsapSection, 'the rendered GSAP section should be available');
+
+	for (const range of ranges) {
+		assert.match(gsapSection, new RegExp(`data-motion-range="${range}"`));
+		assert.match(comparisonPage, new RegExp(`animation-range:${range.replace(' ', '% ')}%`));
+	}
+
+	for (const lane of lanes) {
+		assert.match(gsapSection, new RegExp(`data-motion-lane="${lane}"`));
+		assert.match(comparisonPage, new RegExp(`--stream-lane:\\s*${lane}svh`));
+	}
+});
+
+test('the first Card Stream lane mirrors card three around card two', async () => {
+	const comparisonPage = await readComparisonPage();
+	const gsapSection = comparisonPage.match(/data-gsap-stage([\s\S]*?)data-css-stage/)?.[1];
+
+	assert.ok(gsapSection, 'the rendered GSAP section should be available');
+	assert.match(gsapSection, /data-motion-range="4 36"[\s\S]*?data-motion-range="14 46"[\s\S]*?data-motion-range="24 56"/);
+	assert.match(gsapSection, /data-motion-lane="-10"[\s\S]*?data-motion-lane="-4"[\s\S]*?data-motion-lane="2"/);
+	assert.match(comparisonPage, /--stream-lane:\s*-10svh;\s*animation-range:4% 36%/);
+});
+
+test('the Motion Comparison resolves into a follow-up panel after both Card Streams', async () => {
+	const comparisonPage = await readComparisonPage();
+
+	assert.match(
+		comparisonPage,
+		/data-css-stage[\s\S]*?<section class="scroll-panel" aria-label="Follow-up content"[^>]*>/,
+	);
+	assert.match(comparisonPage, /<h2[^>]*>Animation Playground<\/h2>/);
+	assert.match(
+		comparisonPage,
+		/Scroll back to compare the motion contract again, then drift down to leave the Card Stream behind\./,
+	);
+	assert.match(comparisonPage, /\.scroll-panel[^{]*\{[^}]*min-height:80svh/);
+	assert.match(comparisonPage, /\.scroll-panel[^{]*\{[^}]*background:#172126/);
+	assert.match(comparisonPage, /\.stage-heading[^{]* h2[^{]*\{[^}]*line-height:\.98/);
+	assert.match(comparisonPage, /\.scroll-panel[^{]* h2[^{]*\{[^}]*line-height:normal/);
+});
+
+test('the GSAP cards use the same centered coordinate origin as the CSS cards', async () => {
+	const comparisonPage = await readComparisonPage();
+
+	assert.match(comparisonPage, /xPercent:-50,yPercent:-50/);
+});
+
+test('the GSAP timeline uses the same scene-entry and scene-exit boundaries as the CSS view timeline', async () => {
+	const comparisonPage = await readComparisonPage();
+
+	assert.match(comparisonPage, /start:"top bottom",end:"bottom top",scrub:!0/);
+	assert.match(comparisonPage, /start:"top top",end:"bottom bottom",pin:/);
+});
+
+test('animated Card Streams start pushing the sticky stage before the final card fully exits', async () => {
+	const comparisonPage = await readComparisonPage();
+
+	assert.equal((comparisonPage.match(/--card-stream-scene-height:\s*284\.615svh/g) ?? []).length, 2);
+	assert.match(comparisonPage, /data-motion-range="54 88"/);
+	assert.match(comparisonPage, /animation-range:54% 88%/);
+	assert.match(comparisonPage, /x:"-96vw"/);
+	assert.match(comparisonPage, /translate3d\([^)]*- 96vw/);
+});
+
 test('the CSS implementation gives its Card Stream a sticky viewport stage', async () => {
 	const comparisonPage = await readComparisonPage();
 
@@ -72,14 +180,17 @@ test('the CSS implementation gives its Card Stream a sticky viewport stage', asy
 		comparisonPage,
 		/data-css-stage[\s\S]*?class="card-stream-scene card-stream-scene--css"/,
 	);
-	assert.match(comparisonPage, /\.card-stream-scene--css[^{]*\{[^}]*min-height:600svh/);
+	assert.match(
+		comparisonPage,
+		/\.card-stream-scene--css[^{]*\{[^}]*min-height:var\(--card-stream-scene-height\)/,
+	);
 	assert.match(
 		comparisonPage,
 		/\.card-stream-scene--css[^{]* \.card-stream-stage[^{]*\{[^}]*position:sticky[^}]*min-height:100svh/,
 	);
 	assert.match(
 		comparisonPage,
-		/\.comparison-stage--css[^{]* \.stage-heading[^{]*\{[^}]*position:sticky[^}]*top:clamp\(/,
+		/\.comparison-stage--gsap[^{]* \.stage-heading[^,]*,\.comparison-stage--css[^{]* \.stage-heading[^{]*\{[^}]*position:sticky[^}]*top:clamp\(/,
 	);
 });
 
@@ -92,7 +203,7 @@ test('the CSS implementation moves staggered cards through a native scroll timel
 	assert.match(comparisonPage, /@keyframes css-card-flow\s*\{/);
 	assert.match(
 		comparisonPage,
-		/@keyframes css-card-flow\{[\s\S]*?opacity:0[\s\S]*?translate3d\([^)]*\+ 70vw[\s\S]*?opacity:1[\s\S]*?translate3d\([^)]*- 70vw/,
+		/@keyframes css-card-flow\{[\s\S]*?opacity:0[\s\S]*?translate3d\([^)]*\+ 70vw[\s\S]*?opacity:1[\s\S]*?translate3d\([^)]*- 96vw/,
 	);
 	assert.match(comparisonPage, /38%,54%\{z-index:3;opacity:1/);
 	assert.match(
@@ -129,8 +240,11 @@ test('unsupported browsers receive a readable, non-sticky Card Stream fallback',
 	const featureQueryPosition = comparisonPage.search(
 		/@supports\s*\(animation-timeline:\s*view\(\)\)/,
 	);
+	const cssLongScenePosition = comparisonPage.search(
+		/\.card-stream-scene--css[^{]*\{[^}]*min-height:var\(--card-stream-scene-height\)/,
+	);
 	assert.ok(
-		comparisonPage.indexOf('min-height:600svh') > featureQueryPosition,
+		cssLongScenePosition > featureQueryPosition,
 		'the long sticky scene should only apply when scroll timelines are supported',
 	);
 });
@@ -150,5 +264,14 @@ test('reduced-motion visitors receive every card without sticky or animated move
 	assert.match(
 		reducedMotionStyles,
 		/\.motion-concept-card[^{]*\{[^}]*position:relative[^}]*opacity:1[^}]*transform:none[^}]*animation:none/,
+	);
+	assert.match(reducedMotionStyles, /\.card-stream-scene--gsap[^{]*\{[^}]*min-height:auto/);
+	assert.match(
+		reducedMotionStyles,
+		/\.card-stream-scene--gsap[^{]* \.card-stream-stage[^{]*\{[^}]*position:relative[^}]*min-height:auto/,
+	);
+	assert.match(
+		reducedMotionStyles,
+		/\.card-stream-scene--gsap[^{]* \.card-stream[^{]*\{[^}]*display:grid[^}]*height:auto/,
 	);
 });

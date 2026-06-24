@@ -7,15 +7,19 @@ interface Props {
 	description: string;
 	image: ImageMetadata;
 	streamIndex: number;
+	motionRange?: string;
+	motionLane?: number;
 }
 
-const { title, description, image, streamIndex } = Astro.props;
+const { title, description, image, streamIndex, motionRange, motionLane } = Astro.props;
 ---
 
 <article
 	class="motion-concept-card"
 	role="listitem"
 	style={`--stream-index: ${streamIndex}`}
+	data-motion-range={motionRange}
+	data-motion-lane={motionLane}
 >
 	<Image src={image} alt={`${title} concept illustration`} />
 	<div class="card-copy">
