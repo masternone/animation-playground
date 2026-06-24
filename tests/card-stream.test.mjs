@@ -158,8 +158,8 @@ test('the Motion Comparison resolves into a follow-up panel after both Card Stre
 		comparisonPage,
 		/Scroll back to compare the motion contract again, then drift down to leave the Card Stream behind\./,
 	);
-	assert.match(comparisonPage, /\.scroll-panel[^{]*\{[^}]*min-height:80svh/);
-	assert.match(comparisonPage, /\.scroll-panel[^{]*\{[^}]*background:#172126/);
+	assert.match(comparisonPage, /\.scroll-panel[^{]*\{[^}]*min-height:100svh/);
+	assert.match(comparisonPage, /\.scroll-panel[^{]*\{[^}]*background:#051719/);
 	assert.match(comparisonPage, /\.stage-heading[^{]* h2[^{]*\{[^}]*line-height:\.98/);
 	assert.match(comparisonPage, /\.scroll-panel[^{]* h2[^{]*\{[^}]*line-height:normal/);
 });

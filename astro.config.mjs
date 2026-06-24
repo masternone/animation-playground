@@ -5,4 +5,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
 	site: 'https://masternone.github.io',
 	base: '/animation-playground',
+	devToolbar: {
+		enabled: false,
+	},
 });

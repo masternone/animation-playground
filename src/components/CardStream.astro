@@ -101,6 +101,11 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 					.split(' ')
 					.map(Number);
 				const lane = Number(card.dataset.motionLane ?? 0);
+				const isNarrowViewport = window.matchMedia('(max-width: 640px)').matches;
+				const entryX = isNarrowViewport ? '62vw' : '70vw';
+				const approachX = isNarrowViewport ? '26vw' : '32vw';
+				const activeX = isNarrowViewport ? '8vw' : '18vw';
+				const exitX = isNarrowViewport ? '-14vw' : '-24vw';
 				const start = rangeStart / 100;
 				const span = (rangeEnd - rangeStart) / 100;
 				const position = (progress: number) => start + span * progress;
@@ -110,7 +115,7 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 					{
 						xPercent: -50,
 						yPercent: -50,
-						x: '70vw',
+						x: entryX,
 						y: `${lane + 8}svh`,
 						rotation: 3,
 						scale: 0.96,
@@ -122,7 +127,7 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 				timeline.to(
 					card,
 					{
-						x: '32vw',
+						x: approachX,
 						y: `${lane + 3}svh`,
 						rotation: 1,
 						scale: 0.985,
@@ -136,7 +141,7 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 				timeline.to(
 					card,
 					{
-						x: '18vw',
+						x: activeX,
 						y: `${lane}svh`,
 						rotation: 0,
 						scale: 1,
@@ -150,7 +155,7 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 				timeline.to(
 					card,
 					{
-						x: '18vw',
+						x: activeX,
 						y: `${lane}svh`,
 						opacity: 1,
 						zIndex: 3,
@@ -176,7 +181,7 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 				timeline.to(
 					card,
 					{
-						x: '-24vw',
+						x: exitX,
 						y: `${lane - 11}svh`,
 						rotation: -2,
 						scale: 0.975,
@@ -229,10 +234,11 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 	.motion-support-note {
 		display: block;
 		max-width: 48ch;
-		margin: 0 0 32px;
+		margin: 0 0 clamp(24px, 4vw, 44px);
 		padding: 16px 18px;
-		border: 1px solid oklch(92% 0.025 82 / 32%);
-		background: oklch(19% 0.025 205 / 32%);
+		border: 1px solid oklch(92% 0.025 82 / 44%);
+		border-radius: 4px;
+		background: oklch(19% 0.025 205 / 38%);
 		font-size: 0.9375rem;
 		line-height: 1.5;
 	}
@@ -242,7 +248,7 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 		width: max-content;
 		max-width: none;
 		align-items: flex-start;
-		gap: clamp(16px, 2.4vw, 36px);
+		gap: clamp(18px, 2.8vw, 44px);
 		margin-inline: calc(var(--page-gutter) * -1);
 		padding: 0 var(--page-gutter) clamp(96px, 12vw, 176px);
 	}
@@ -250,7 +256,9 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 	.card-stream-scene--css .card-stream {
 		display: grid;
 		width: 100%;
-		grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+		align-items: stretch;
+		gap: clamp(18px, 2.8vw, 44px);
 		margin-inline: 0;
 		padding-inline: 0;
 	}
@@ -269,6 +277,7 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 		display: grid;
 		min-height: 100svh;
 		align-items: center;
+		isolation: isolate;
 		overflow: clip;
 	}
 
@@ -312,6 +321,7 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 			display: grid;
 			min-height: 100svh;
 			align-items: center;
+			isolation: isolate;
 			overflow: clip;
 		}
 
@@ -420,11 +430,58 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 
 	@media (max-width: 640px) {
 		.card-stream {
-			gap: 14px;
+			gap: 16px;
 		}
 
 		.card-stream-scene--css .card-stream :global(.motion-concept-card) {
-			width: min(76vw, 320px);
+			width: min(78vw, 330px);
+		}
+
+		@supports (animation-timeline: view()) {
+			@keyframes css-card-flow {
+				0% {
+					z-index: 0;
+					opacity: 0;
+					transform: translate3d(calc(-50% + 62vw), calc(-50% + var(--stream-lane) + 8svh), 0)
+						rotate(3deg) scale(0.96);
+				}
+
+				22% {
+					z-index: 1;
+					opacity: 0.72;
+					transform: translate3d(calc(-50% + 26vw), calc(-50% + var(--stream-lane) + 3svh), 0)
+						rotate(1deg) scale(0.985);
+				}
+
+				38%,
+				54% {
+					z-index: 3;
+					opacity: 1;
+					transform: translate3d(calc(-50% + 8vw), calc(-50% + var(--stream-lane)), 0)
+						rotate(0deg) scale(1);
+				}
+
+				68% {
+					z-index: 2;
+					opacity: 0.48;
+					transform: translate3d(calc(-50% - 2vw), calc(-50% + var(--stream-lane) - 5svh), 0)
+						rotate(-1deg) scale(0.99);
+				}
+
+				80% {
+					z-index: 1;
+					opacity: 0.1;
+					transform: translate3d(calc(-50% - 14vw), calc(-50% + var(--stream-lane) - 11svh), 0)
+						rotate(-2deg) scale(0.975);
+				}
+
+				100% {
+					z-index: 0;
+					opacity: 0;
+					transform: translate3d(calc(-50% - 96vw), calc(-50% + var(--stream-lane) - 20svh), 0)
+						rotate(-3deg) scale(0.96);
+				}
+			}
 		}
 	}
 
@@ -445,7 +502,8 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 			display: grid;
 			width: 100%;
 			height: auto;
-			grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+			grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+			gap: clamp(18px, 2.8vw, 44px);
 			margin-inline: 0;
 			padding: 0;
 		}
@@ -476,7 +534,8 @@ const animatedSceneHeight = `${((stickyReleaseProgress / (1 - stickyReleaseProgr
 			display: grid;
 			width: 100%;
 			height: auto;
-			grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+			grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+			gap: clamp(18px, 2.8vw, 44px);
 			margin-inline: 0;
 			padding: 0;
 		}
