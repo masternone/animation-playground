@@ -1,3 +1,6 @@
+# git config
+.gitconfig
+
 # build output
 dist/
 
@@ -22,3 +25,4 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
